@@ -36,12 +36,16 @@ class DFUDriver(Driver):
 
     @Driver.check_active
     @step(args=['altsetting', 'filename'])
-    def download(self, altsetting, filename):
+    def download(self, altsetting, filename, wait: float | None = None):
         mf = ManagedFile(filename, self.dfu)
         mf.sync_to_resource()
 
+        args = ['--alt', str(altsetting), '--download', mf.get_remote_path()]
+        if wait is not None:
+            args += ['--wait', str(wait)]
+
         processwrapper.check_output(
-            self._get_dfu_prefix() + ['--alt', str(altsetting), '--download', mf.get_remote_path()],
+            self._get_dfu_prefix() + args,
             print_on_silent_log=True
         )
 
