@@ -68,8 +68,9 @@ class ManagedFile:
                     f"{self.rpath}{os.path.basename(self.local_path)}"
                 )
         else:
-            conn = sshmanager.open("localhost")
             self.rpath = os.path.dirname(self.local_path) + "/"
+            if symlink:
+                raise Exception("Cannot create symlink on local resource")
 
         if symlink is not None:
             self.logger.info("Linking")
